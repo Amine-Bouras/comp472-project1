@@ -4,11 +4,11 @@ from copy import deepcopy
 
 def main():
 
-    start_state_puzzle = list("7421B5863")
+    start_state_puzzle = list("4137B5826")
     goal_state_puzzle = list("12345678B")
     goal_state_puzzle_array = np.array(goal_state_puzzle).reshape((3,3))
     start_state_puzzle_array = np.array(start_state_puzzle).reshape((3,3))
-    general_search(start_state_puzzle_array, goal_state_puzzle_array, best_first, manhattan)
+    general_search(start_state_puzzle_array, goal_state_puzzle_array, a_star, manhattan)
 
 def general_search(start_state, goal_state, search_type, heuristics = None):
 
@@ -17,13 +17,31 @@ def general_search(start_state, goal_state, search_type, heuristics = None):
     if heuristics != None:
         search_type(start_state, goal_state, heuristics)
 
+def my_heuristic(current_state, goal_state):
+    corner_tile_heuristic = 0
+    if current_state[0][0]!= goal_state[0][0]:
+        corner_tile_heuristic += 1
+    if current_state[0][0]!= goal_state[0][2]:
+        corner_tile_heuristic += 1
+    if current_state[0][0]!= goal_state[2][0]:
+        corner_tile_heuristic += 1
+    if current_state[0][0]!= goal_state[2][2]:
+        corner_tile_heuristic += 1
+    corner_tile_heuristic = corner_tile_heuristic + manhattan(current_state, goal_state)
+
+    return corner_tile_heuristic
+
+
 def a_star(start_state, goal_state, heuristics):
+    g = 0
     open_list = [start_state]
     closed_list = []
 
     while open_list:
         current_state = np.array(open_list.pop(0))
+        g +=1
         closed_list.append(current_state)
+        print(f"g for this iteration is : {g}\n")
         print(current_state)
         print("\n")
 
